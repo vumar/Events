@@ -1,0 +1,45 @@
+import React, { useState, useEffect } from "react";
+import Card from "./Card";
+import axios from "axios";
+
+function DashBoard() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState("");
+
+  useEffect(() => {
+    axios
+      .get("https://reqres.in/api/users?page=1&per_page=100")
+      .then((res) => {
+        console.log("user.data", res.data);
+        setLoading(false);
+        setData(res.data.data);
+      })
+      .catch((err) => {
+        console.log("Failed", err);
+      });
+  }, []);
+
+  return (
+    <div>
+      {loading ? (
+        "Loading..."
+      ) : (
+        <div className="row">
+          {data.map((user, index) => {
+            return (
+              <Card
+                key={index}
+                avatar={user.avatar}
+                firstName={user.first_name}
+                lastName={user.last_name}
+                email={user.email}
+              />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default DashBoard;
